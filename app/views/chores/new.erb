@@ -1,0 +1,22 @@
+<% if flash.has?(:message) %>
+  <h1><%=flash[:message]%></h1>
+<%end%>
+
+<h1>New Chore</h1>
+<form action="/chores" method="POST">
+
+  <h3>Create a new chore:</h3>
+  <input type="text" name="chore[title]" id="chore_title" placeholder="ex: Kitchen">
+
+  <br></br>
+
+  <h3>Assign tasks to the chore:</h3>
+  <% Task.all.each do |task| %>
+    <input type="checkbox" name="tasks[]" id="<%=task.title%>" value="<%= task.id %>"><%=task.title%></input><br />
+
+  <% end %>
+
+  <br></br>
+
+  <button type="submit" name="submit">submit</button>
+</form>
