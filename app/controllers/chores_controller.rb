@@ -25,16 +25,12 @@ class ChoresController < ApplicationController
 
   post '/chores' do
     @chore = Chore.create(title: params[:chore][:title])
-    #binding.pry
     @chore.task_ids = params["tasks"]
-
+    @chore.user = current_user
     if @chore.save
-      flash[:message] = "#{@chore.title} has been added to the chore list."
-
+      
       redirect to "chores/#{@chore.slug}"
     else
-      flash[:message] = "It seems there was a problem. Please try that again."
-
       erb :'chores/new'
     end
   end

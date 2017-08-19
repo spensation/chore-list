@@ -5,11 +5,12 @@
 <h1>Welcome back, <%= @user.username%>, let's get to it!</h1>
 <br></br>
 
-<ul>
+<ol>
   <% @user.chores.each do |chore| %>
-    <li> <%= chore.title %></li>
+    <li><a href="/chores/<%= chore.slug %>"> <%= chore.title %></a></li>
   <% end %>
-</ul>
+</ol>
+<br></br>
 
 <h4><a href="/chores/new">Create a new chore!</a></h4>
 <br></br>
