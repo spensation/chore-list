@@ -46,12 +46,16 @@ class ChoresController < ApplicationController
   end
 
   get '/chores/:slug/edit' do
-    if current_user_logged_in?
-      @chore = Chore.find_by_slug(params[:slug])
-      erb :'chores/edit'
-    else
+    if !logged_in?
       flash[:massage] = "You must be logged in to perform this function"
       redirect '/login'
+    else
+      @chore = Chore.find_by_slug(params[:slug])
+      if @chore && @chore.user == current_user
+        erb :'chores/edit'
+      else
+        redirect '/chores'
+      end
     end
   end
 
@@ -60,7 +64,7 @@ class ChoresController < ApplicationController
     if !logged_in?
       flash[:message] = "You must be logged in to perform this function"
       redirect "/"
-    elsif session[:user_id] != @chore.user.id
+    elsif @chore.user != current_user
       flash[:message] = "You must be the current user to perform this function"
       redirect "/chores"
     else
@@ -81,7 +85,7 @@ class ChoresController < ApplicationController
     if !logged_in?
       flash[:message] = "You must be logged in to perform this function"
       redirect "/"
-    elsif session[:user_id] != @chore.user.id
+    elsif @chore.user != current_user
       flash[:message] = "You must be the current user to perform this function"
       redirect "/chores"
     else
