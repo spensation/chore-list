@@ -1,0 +1,11 @@
+<h1>The Big List of Chores:</h1>
+<h2>Welcome, <%=@user.username%></h2>
+<%@chores.each do |chore|%>
+<h4><strong><%=chore.title%></strong> -- <%=chore.user.username%> </h4>
+<br />
+<%end%>
+
+<br></br>
+
+<h5><a href="/users/:id">Back to my chores</a></h5>
+<h5><a href="/logout">Log out</a></h5>

@@ -5,8 +5,8 @@ class ChoresController < ApplicationController
 
   get '/chores' do
     if logged_in?
-      @chores = Chore.all
       @user = current_user
+      @chores = Chore.all
       erb :'/chores/index'
     else
       redirect '/login'
@@ -50,7 +50,7 @@ class ChoresController < ApplicationController
       @chore = Chore.find_by_slug(params[:slug])
       erb :'chores/edit'
     else
-      flash[:massage] = "You must be logged in to make changes."
+      flash[:massage] = "You must be logged in to perform this function"
       redirect '/login'
     end
   end
@@ -58,15 +58,14 @@ class ChoresController < ApplicationController
   patch '/chores/:slug' do
     @chore = Chore.find_by_slug(params[:slug])
     if !logged_in?
-      redirect "/login"
-    elsif session[:user_id] != @chore.user.id
-      flash[:message] = "Please edit your own chores!"
+      flash[:message] = "You must be logged in to perform this function"
       redirect "/"
+    elsif session[:user_id] != @chore.user.id
+      flash[:message] = "You must be the current user to perform this function"
+      redirect "/chores"
     else
       @chore.update(params[:chore])
       @chore.task_ids = params["tasks"]
-      # if !params["task"]["title"].empty?
-      #   @chore.tasks << Task.find_or_create_by(title: params[:task][:title])
         if @chore.save
           flash[:message] = "Successfully edited chore."
           redirect "chores/#{@chore.slug}"
@@ -79,8 +78,16 @@ class ChoresController < ApplicationController
 
   delete '/chores/:slug' do
     @chore = Chore.find_by_slug(params[:slug])
-    @chore.destroy
-    flash[:message] = "#{@chore.title} successfully deleted."
-    redirect "/chores"
+    if !logged_in?
+      flash[:message] = "You must be logged in to perform this function"
+      redirect "/"
+    elsif session[:user_id] != @chore.user.id
+      flash[:message] = "You must be the current user to perform this function"
+      redirect "/chores"
+    else
+      @chore.destroy
+      flash[:message] = "#{@chore.title} successfully deleted."
+      redirect "/users/:id"
+    end
   end
 end
