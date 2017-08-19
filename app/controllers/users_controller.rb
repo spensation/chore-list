@@ -27,6 +27,7 @@ class UsersController < ApplicationController
 
       if logged_in? && current_user_logged_in?
         @user = current_user
+        @user.chores = Chore.find_or_create_by(params[:chore])
         erb :'users/show'
       else
         flash[:message] = "Private user's page.  Please log in as user to view"

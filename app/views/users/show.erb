@@ -2,10 +2,14 @@
   <h1><%=flash[:message]%></h1>
 <%end%>
 
-<h1>Welcome back, <%= @user.username%>, what do you want to get done?</h1>
+<h1>Welcome back, <%= @user.username%>, let's get to it!</h1>
 <br></br>
 
-
+<ul>
+  <% @user.chores.each do |chore| %>
+    <li> <%= chore.title %></li>
+  <% end %>
+</ul>
 
 <h4><a href="/chores/new">Create a new chore!</a></h4>
 <br></br>
