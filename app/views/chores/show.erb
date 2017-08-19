@@ -1,0 +1,20 @@
+<% if flash.has?(:message) %>
+  <h1><%=flash[:message]%></h1>
+<%end%>
+
+<h1><%= @chore.title%></h1>
+
+<br></br>
+<h2>Expectations:</h2>
+<% @chore.tasks.each do |task| %>
+<li>
+  <h4><%= task.title %></h4>
+</li>
+<%end%>
+
+<br></br>
+<a href="/chores">Back to all the chores</a>
+<br></br>
+<a href="/chores/<%= @chore.slug%>/edit">Edit chore</a>
+<br></br>
+<a href="/logout">Log out</a>
