@@ -26,9 +26,9 @@ class ChoresController < ApplicationController
   post '/chores' do
     @chore = Chore.create(title: params[:chore][:title])
     @chore.task_ids = params["tasks"]
-    @chore.user = current_user
+    @user = current_user
     if @chore.save
-      
+      @user.chores << @chore
       redirect to "chores/#{@chore.slug}"
     else
       erb :'chores/new'
@@ -46,7 +46,7 @@ class ChoresController < ApplicationController
   end
 
   get '/chores/:slug/edit' do
-    if logged_in?
+    if current_user_logged_in?
       @chore = Chore.find_by_slug(params[:slug])
       erb :'chores/edit'
     else
@@ -57,15 +57,24 @@ class ChoresController < ApplicationController
 
   patch '/chores/:slug' do
     @chore = Chore.find_by_slug(params[:slug])
-    @chore.update(title: params[:chore][:title])
-    @chore.task_ids = params["tasks"]
-    if @chore.save
-      flash[:message] = "Successfully edited chore."
-      redirect "chores/#{@chore.slug}"
+    if !logged_in?
+      redirect "/login"
+    elsif session[:user_id] != @chore.user.id
+      flash[:message] = "Please edit your own chores!"
+      redirect "/"
     else
-      flash[:message] = "There seems to be a problem. Please try that again"
-      redirect "/chores/:slug/edit"
-    end
+      @chore.update(params[:chore])
+      @chore.task_ids = params["tasks"]
+      # if !params["task"]["title"].empty?
+      #   @chore.tasks << Task.find_or_create_by(title: params[:task][:title])
+        if @chore.save
+          flash[:message] = "Successfully edited chore."
+          redirect "chores/#{@chore.slug}"
+        else
+          flash[:message] = "There seems to be a problem. Please try that again"
+          redirect "/chores/:slug/edit"
+        end
+      end
   end
 
   delete '/chores/:slug' do

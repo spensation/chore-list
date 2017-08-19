@@ -1,0 +1,45 @@
+<% if flash.has?(:message) %>
+  <h1><%=flash[:message]%></h1>
+<%end%>
+
+<h1>Edit a chore:</h1>
+<form action="/chores/<%=@chore.slug%>" method="POST">
+  <h2><label>Title: <%= @chore.title%></label></h2>
+  <input type="hidden" name="_method" id="hidden" value="patch">
+
+  <br></br>
+
+  <label>rename chore:</label>
+  <input type="text" name="chore[title]" id="chore_title" placeholder="git'er dun'" value="<%= @chore.title%>">
+
+  <br></br>
+
+  <%Task.all.each do |task|%>
+    <input type="checkbox" name="tasks[]" value="<%= task.id %>" id="<%= task.title %>" <%='checked' if @chore.tasks.include?(task) %>><%=task.title%><br />
+
+  <%end%>
+
+  <!-- <br></br>
+
+  <label>and/or, create a new task:</label>
+
+  <br></br>
+
+    <input  type="text" name="tasks[]" id="task_title" placeholder="Task"> -->
+
+  <br></br>
+  <input type="submit" value="submit">
+</form>
+
+<br></br>
+
+<p>
+  <form action="/chores/<%= @chore.slug%>" method="POST">
+    <input id="hidden" type="hidden" name="_method" value="delete">
+    <button type="submit">Delete Chore</button>
+  </form>
+</p>
+
+<br></br>
+
+<p><a href="/logout">Log out</a></p>

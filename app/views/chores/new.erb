@@ -14,9 +14,7 @@
   <h3>Assign tasks to the chore:</h3>
   <% Task.all.each do |task| %>
     <input type="checkbox" name="tasks[]" id="<%=task.title%>" value="<%= task.id %>"><%=task.title%></input><br />
-
   <% end %>
-
   <br></br>
 
   <button type="submit" name="submit">submit</button>
