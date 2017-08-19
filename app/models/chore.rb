@@ -1,9 +1,9 @@
 class Chore < ActiveRecord::Base
-  has_many :chore_tasks
-  has_many :tasks, through: :tasks
-  belongs_to :user
-
   validates :title, presence: true
+
+  has_many :chore_tasks
+  has_many :tasks, through: :chore_tasks
+  belongs_to :user
 
   def self.find_by_slug(slugged)
     found = []

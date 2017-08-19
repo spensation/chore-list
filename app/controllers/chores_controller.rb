@@ -16,6 +16,7 @@ class ChoresController < ApplicationController
   get '/chores/new' do
     if logged_in?
       @chores = Chore.all
+      @user = current_user
       erb :'/chores/new'
     else
       redirect '/login'
@@ -24,7 +25,7 @@ class ChoresController < ApplicationController
 
   post '/chores' do
     @chore = Chore.create(title: params[:chore][:title])
-    @chore.user = User.find_or_create_by(username: params[:username])
+    #binding.pry
     @chore.task_ids = params["tasks"]
 
     if @chore.save
