@@ -7,4 +7,5 @@ end
 use Rack::MethodOverride
 use UsersController
 use SessionsController
+use ChoresController
 run ApplicationController
